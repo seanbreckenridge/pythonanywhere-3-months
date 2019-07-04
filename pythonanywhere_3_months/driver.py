@@ -1,16 +1,8 @@
 #!/usr/local/env python3
 
-import sys
-import os
-import traceback
-import logging
-import argparse
+from pythonanywhere_3_months import *
 
-import yaml
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 
-login_page = "https://www.pythonanywhere.com/login/"
 logging.basicConfig(level=logging.DEBUG)
 
 
@@ -41,7 +33,7 @@ def get_options():
 
 
 def get_credentials(filepath):
-    absolute_path = os.path.abspath(os.path.join(os.path.dirname(__file__), filepath))
+    absolute_path = os.path.abspath(os.path.join(Path.home(), filepath))
     logging.debug("Credential File Location: {}".format(absolute_path))
     with open(absolute_path, 'r') as cred:
         creds = yaml.load(cred, Loader=yaml.FullLoader)
@@ -51,7 +43,7 @@ def get_credentials(filepath):
 def main():
     """Gets options, runs program, cleans up selenium on exception."""
     use_hidden, chromedriver_path = get_options()
-    username_or_email_address, password = get_credentials("credentials.yaml")
+    username_or_email_address, password = get_credentials(credential_file_name)
     try:
         driver = create_webdriver(chromedriver_path, use_hidden)
 

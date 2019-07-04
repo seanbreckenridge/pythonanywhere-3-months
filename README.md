@@ -2,10 +2,18 @@
 
 Logs into your [pythonanywhere](https://www.pythonanywhere.com/) account and clicks the 'Run until 3 months from today' button, so your website doesn't deactivate automatically.
 
-Requires: `python3 -m pip install --user selenium PyYaml` and a chromedriver binary. See [here](https://gist.github.com/seanbreckenridge/709a824b8c56ea22dbf4e86a7804287d) for chromedriver.
+Requires: Python 3.4+ and a chromedriver binary. See [here](https://gist.github.com/seanbreckenridge/709a824b8c56ea22dbf4e86a7804287d) for chromedriver.
+
+#### Install and Run:
 
 ```
-usage: driver.py [-h] [-H] [-c CHROMEDRIVER_PATH]
+python3 -m pip install git+https://github.com/seanbreckenridge/pythonanywhere-3-months
+pythonanywhere_3_months -Hc /usr/local/bin/chromedriver
+```
+
+
+```
+usage: pythonanywhere_3_months [-h] [-H] [-c CHROMEDRIVER_PATH]
 
 Clicks the 'Run until 3 months from today' on pythonanywhere
 
@@ -17,18 +25,9 @@ optional arguments:
                         be the full path.
 ```
 
-Put pythonanywhere credentials in a file named `credentials.yaml` in the same directory as `driver.py` with contents like:
+Put pythonanywhere credentials in your home directory; at `~/.pythonanywhere_credentials.yaml` with contents like:
 
 ```
 username: yourusername
 password: 2UGArHcjfKz@9GCGuNXN
-```
-
-#### Run:
-
-```
-git clone https://github.com/seanbreckenridge/pythonanywhere-3-months
-cd pythonanywhere-3-months
-python3 -m pip install --user selenium PyYaml
-python3 driver.py -Hc /usr/local/bin/chromedriver # pass chromedriver binary path
 ```
