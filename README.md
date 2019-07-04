@@ -11,6 +11,7 @@ python3 -m pip install git+https://github.com/seanbreckenridge/pythonanywhere-3-
 pythonanywhere_3_months -Hc /usr/local/bin/chromedriver
 ```
 
+As long as no visible errors are thrown, the script succeeded. You can run it without the `-H` flag to watch it log in and click the relevant links/buttons.
 
 ```
 usage: pythonanywhere_3_months [-h] [-H] [-c CHROMEDRIVER_PATH]
