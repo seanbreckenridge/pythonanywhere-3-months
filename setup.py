@@ -26,7 +26,8 @@ setup(
     packages=find_packages(include=['pythonanywhere_3_months']),
     entry_points = {
         'console_scripts': [
-            "pythonanywhere_3_months = pythonanywhere_3_months.driver:main"
+            "pythonanywhere_3_months = pythonanywhere_3_months.driver:main",
+            "pythonanywhere_check_since = pythonanywhere_3_months.last_run:check"
         ]
     },
     url='https://github.com/seanbreckenridge/pythonanywhere-3-months',

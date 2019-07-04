@@ -31,3 +31,5 @@ Put pythonanywhere credentials in your home directory; at `~/.pythonanywhere_cre
 username: yourusername
 password: 2UGArHcjfKz@9GCGuNXN
 ```
+
+This also installs a command line script called `pythonanywhere_check_since` which prints nothing if `pythonanywhere_3_months` has been run in the last 2 months, but prints a reminder to run it otherwise. I have `pythonanywhere_check_since` in my `~/.zshrc` (equivalent to `~/.bashrc` or `~/.bash_profile`) file; it checks whenever I open a shell.

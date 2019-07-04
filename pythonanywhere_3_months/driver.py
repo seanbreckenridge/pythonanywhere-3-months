@@ -1,5 +1,14 @@
 #!/usr/local/env python3
 
+import sys
+import traceback
+import logging
+import argparse
+
+import yaml
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+
 from pythonanywhere_3_months import *
 
 
@@ -33,6 +42,7 @@ def get_options():
 
 
 def get_credentials(filepath):
+    """Gets pythonanywhere credentials from the dotfile"""
     absolute_path = os.path.abspath(os.path.join(Path.home(), filepath))
     logging.debug("Credential File Location: {}".format(absolute_path))
     with open(absolute_path, 'r') as cred:
@@ -64,6 +74,10 @@ def main():
         traceback.print_exc()
     finally:
         driver.quit()
+        # save current time to 'last run time file', so we can check if we need to run this again
+        with open(last_run_at_absolute_path, 'w') as f:
+            f.write(str(time()))
+
 
 
 if __name__ == "__main__":
