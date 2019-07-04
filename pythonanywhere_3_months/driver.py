@@ -3,7 +3,7 @@
 from pythonanywhere_3_months import *
 
 
-logging.basicConfig(level=logging.DEBUG)
+logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelno)s - %(message)s")
 
 
 def create_webdriver(chromedriver_path, hide):
@@ -60,9 +60,6 @@ def main():
 
         # Click 'Run until 3 months from today'
         driver.find_element_by_css_selector("input.webapp_extend[type='submit']").click()
-
-        print("Finished Successfully")
-
     except:
         traceback.print_exc()
     finally:
