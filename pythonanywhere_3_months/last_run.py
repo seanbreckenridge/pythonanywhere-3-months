@@ -1,3 +1,4 @@
+import sys
 
 from pythonanywhere_3_months import *
 
@@ -8,3 +9,5 @@ def check():
     two_months_in_seconds = 5184000
     if time_since_run > two_months_in_seconds:
         print("Its been more than 2 months since you've ran 'pythonanywhere_3_months'!")
+        sys.exit(1)
+    sys.exit(0)
