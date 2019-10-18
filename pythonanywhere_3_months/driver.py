@@ -35,7 +35,7 @@ def get_options():
         logging.debug("On Mac, defaulting chromedriver path to to '/usr/local/bin/chromedriver'")
         args.chromedriver_path = "/usr/local/bin/chromedriver"  # default on mac
     elif args.chromedriver_path is None:
-        logging.warning("Didn't recieve a path to chromedriver. Provide one with like '-c /path/to/chromedriver'")
+        logging.warning("Didn't recieve a path to chromedriver. Provide one like '-c /path/to/chromedriver'")
     else:
         logging.debug("Chromedriver path: {}".format(args.chromedriver_path))
     return args.hidden, args.chromedriver_path
