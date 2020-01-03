@@ -36,6 +36,7 @@ def get_options():
         args.chromedriver_path = "/usr/local/bin/chromedriver"  # default on mac
     elif args.chromedriver_path is None:
         logging.warning("Didn't recieve a path to chromedriver. Provide one like '-c /path/to/chromedriver'")
+        sys.exit(1)
     else:
         logging.debug("Chromedriver path: {}".format(args.chromedriver_path))
     return args.hidden, args.chromedriver_path
@@ -65,8 +66,8 @@ def main():
         password_input.send_keys(password)
         driver.find_element_by_id("id_next").click()
 
-        # Go to Web page
-        driver.find_element_by_id("id_web_app_link").click()
+        # Go to "Web" page
+        driver.get(driver.current_url + "/webapps")
 
         # Click 'Run until 3 months from today'
         driver.find_element_by_css_selector("input.webapp_extend[type='submit']").click()
