@@ -26,7 +26,7 @@ optional arguments:
                         be the full path.
 ```
 
-Put pythonanywhere credentials in your home directory; at `~/.pythonanywhere_credentials.yaml` with contents like:
+Put pythonanywhere credentials in your home directory; at `$XDG_DATA_HOME/pythonanywhere_credentials.yaml` (`~/.local/share/pythonanywhere_credentials.yaml`) with contents like:
 
 ```
 username: yourusername
