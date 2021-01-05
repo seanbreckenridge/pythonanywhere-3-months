@@ -30,7 +30,7 @@ setup(
             "pythonanywhere_check_since = pythonanywhere_3_months.last_run:check"
         ]
     },
-    url='https://gitlab.com/seanbreckenridge/pythonanywhere-3-months',
+    url='https://github.com/seanbreckenridge/pythonanywhere-3-months',
     version='0.1.0',
     zip_safe=True,
 )

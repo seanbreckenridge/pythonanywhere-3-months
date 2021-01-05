@@ -7,7 +7,7 @@ Requires: Python 3.4+ and a chromedriver binary. See [here](https://gist.github.
 #### Install and Run:
 
 ```
-python3 -m pip install git+https://gitlab.com/seanbreckenridge/pythonanywhere-3-months
+python3 -m pip install git+https://github.com/seanbreckenridge/pythonanywhere-3-months
 pythonanywhere_3_months -Hc /usr/local/bin/chromedriver
 ```
 
