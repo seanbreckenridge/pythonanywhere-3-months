@@ -9,8 +9,8 @@ from time import time
 from pathlib import Path
 
 import yaml
-from selenium import webdriver  # type: ignore
-from selenium.webdriver.chrome.options import Options  # type: ignore
+from selenium import webdriver  # type: ignore[import]
+from selenium.webdriver.chrome.options import Options  # type: ignore[import]
 
 from pythonanywhere_3_months import (
     last_run_at_absolute_path,
