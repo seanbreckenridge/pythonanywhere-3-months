@@ -2,7 +2,7 @@
 
 Logs into your [pythonanywhere](https://www.pythonanywhere.com/) account and clicks the 'Run until 3 months from today' button, so your website doesn't deactivate automatically.
 
-Requires: Python 3.4+ and a chromedriver binary. See [here](https://gist.github.com/seanbreckenridge/709a824b8c56ea22dbf4e86a7804287d) for chromedriver.
+Requires: Python 3.6+ and a chromedriver binary. See [here](https://gist.github.com/seanbreckenridge/709a824b8c56ea22dbf4e86a7804287d) for chromedriver.
 
 #### Install and Run:
 

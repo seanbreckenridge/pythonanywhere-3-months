@@ -5,16 +5,17 @@ import sys
 import traceback
 import logging
 import argparse
+import shutil
 from time import time
 from pathlib import Path
+from typing import Tuple, Optional
 
 import yaml
 from selenium import webdriver  # type: ignore[import]
 from selenium.webdriver.chrome.options import Options  # type: ignore[import]
 
-from pythonanywhere_3_months import (
+from . import (
     last_run_at_absolute_path,
-    credential_file_name,
     login_page,
 )
 
@@ -22,7 +23,7 @@ from pythonanywhere_3_months import (
 logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelno)s - %(message)s")
 
 
-def create_webdriver(chromedriver_path, hide):
+def create_webdriver(chromedriver_path: str, hide: bool) -> webdriver.Chrome:
     """Creates a webdriver, hides if requested."""
     options = Options()
     if hide:
@@ -32,7 +33,7 @@ def create_webdriver(chromedriver_path, hide):
     return webdriver.Chrome(chromedriver_path, options=options)
 
 
-def get_options():
+def get_options() -> Tuple[str, bool]:
     """Gets options from user"""
     parser = argparse.ArgumentParser(
         description="Clicks the 'Run until 3 months from today' on pythonanywhere"
@@ -44,16 +45,12 @@ def get_options():
         "-c",
         "--chromedriver-path",
         help="Provides the location of ChromeDriver. Should probably be the full path.",
+        default=shutil.which("chromedriver"),
     )
     args = parser.parse_args()
-    if args.chromedriver_path is None and sys.platform == "darwin":
-        logging.debug(
-            "On Mac, defaulting chromedriver path to to '/usr/local/bin/chromedriver'"
-        )
-        args.chromedriver_path = "/usr/local/bin/chromedriver"  # default on mac
-    elif args.chromedriver_path is None:
+    if args.chromedriver_path is None:
         logging.warning(
-            "Didn't receive a path to chromedriver. Provide one like '-c /path/to/chromedriver'"
+            "Couldn't find the location of a chromedriver. Provide one like '-c /path/to/chromedriver'"
         )
         sys.exit(1)
     else:
@@ -61,7 +58,7 @@ def get_options():
     return args.hidden, args.chromedriver_path
 
 
-def get_credentials(filepath):
+def get_credentials(filepath: str) -> Tuple[str, str]:
     """Gets pythonanywhere credentials from the dotfile"""
     absolute_path = os.path.abspath(os.path.join(Path.home(), filepath))
     logging.debug("Credential File Location: {}".format(absolute_path))
@@ -70,28 +67,35 @@ def get_credentials(filepath):
     return creds["username"], creds["password"]
 
 
-def main():
-    """Gets options, runs program, cleans up selenium on exception."""
-    use_hidden, chromedriver_path = get_options()
-    username_or_email_address, password = get_credentials(credential_file_name)
+# global variables so someone can monkey patch
+# if they want to -- incase this breaks
+LOGIN_ID = "id_auth-username"
+PASSWORD_ID = "id_auth-password"
+LOGIN_BUTTON = "id_next"
+RUN_BUTTON_SELECTOR = "input.webapp_extend[type='submit']"
+
+
+# encapsulate main functionality, can import any use in code instead
+# of running from cmdline
+def run(
+    username: str, password: str, chromedriver_path: str, use_hidden: bool = False
+) -> None:
     try:
-        driver = create_webdriver(chromedriver_path, use_hidden)
+        driver: webdriver.Chrome = create_webdriver(chromedriver_path, use_hidden)
 
         # Login
         driver.get(login_page)
-        email_input = driver.find_element_by_id("id_auth-username")
-        password_input = driver.find_element_by_id("id_auth-password")
-        email_input.send_keys(username_or_email_address)
+        email_input = driver.find_element_by_id(LOGIN_ID)
+        password_input = driver.find_element_by_id(PASSWORD_ID)
+        email_input.send_keys(username)
         password_input.send_keys(password)
-        driver.find_element_by_id("id_next").click()
+        driver.find_element_by_id(LOGIN_BUTTON).click()
 
         # Go to "Web" page
         driver.get(driver.current_url + "/webapps")
 
         # Click 'Run until 3 months from today'
-        driver.find_element_by_css_selector(
-            "input.webapp_extend[type='submit']"
-        ).click()
+        driver.find_element_by_css_selector(RUN_BUTTON_SELECTOR).click()
     except:
         traceback.print_exc()
     finally:
@@ -99,7 +103,3 @@ def main():
         # save current time to 'last run time file', so we can check if we need to run this again
         with open(last_run_at_absolute_path, "w") as f:
             f.write(str(time()))
-
-
-if __name__ == "__main__":
-    main()
