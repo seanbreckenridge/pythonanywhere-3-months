@@ -11,8 +11,9 @@ from pathlib import Path
 from typing import Tuple, Optional
 
 import yaml
-from selenium import webdriver  # type: ignore[import]
-from selenium.webdriver.chrome.options import Options  # type: ignore[import]
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
 
 from . import (
     last_run_at_absolute_path,
@@ -80,26 +81,28 @@ RUN_BUTTON_SELECTOR = "input.webapp_extend[type='submit']"
 def run(
     username: str, password: str, chromedriver_path: str, use_hidden: bool = False
 ) -> None:
+    driver: Optional[webdriver.Chrome] = None
     try:
-        driver: webdriver.Chrome = create_webdriver(chromedriver_path, use_hidden)
+        driver = create_webdriver(chromedriver_path, use_hidden)
 
         # Login
         driver.get(login_page)
-        email_input = driver.find_element_by_id(LOGIN_ID)
-        password_input = driver.find_element_by_id(PASSWORD_ID)
+        email_input = driver.find_element(By.ID, LOGIN_ID)
+        password_input = driver.find_element(By.ID, PASSWORD_ID)
         email_input.send_keys(username)
         password_input.send_keys(password)
-        driver.find_element_by_id(LOGIN_BUTTON).click()
+        driver.find_element(By.ID, LOGIN_BUTTON).click()
 
         # Go to "Web" page
         driver.get(driver.current_url + "/webapps")
 
         # Click 'Run until 3 months from today'
-        driver.find_element_by_css_selector(RUN_BUTTON_SELECTOR).click()
+        driver.find_element(By.CSS_SELECTOR, RUN_BUTTON_SELECTOR).click()
     except:
         traceback.print_exc()
     finally:
-        driver.quit()
+        if driver:
+            driver.quit()
         # save current time to 'last run time file', so we can check if we need to run this again
         with open(last_run_at_absolute_path, "w") as f:
             f.write(str(time()))
