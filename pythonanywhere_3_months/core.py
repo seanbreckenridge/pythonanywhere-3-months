@@ -34,7 +34,7 @@ def create_webdriver(chromedriver_path: str, hide: bool) -> webdriver.Chrome:
     return webdriver.Chrome(chromedriver_path, options=options)
 
 
-def get_options() -> Tuple[str, bool]:
+def get_options() -> Tuple[bool, str]:
     """Gets options from user"""
     parser = argparse.ArgumentParser(
         description="Clicks the 'Run until 3 months from today' on pythonanywhere"
