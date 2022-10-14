@@ -6,6 +6,7 @@ import traceback
 import logging
 import argparse
 import shutil
+import warnings
 from time import time
 from pathlib import Path
 from typing import Tuple, Optional
@@ -21,7 +22,10 @@ from . import (
 )
 
 
-logging.basicConfig(level=logging.DEBUG, format="%(asctime)s %(levelno)s - %(message)s")
+def setup_debug_logging() -> None:
+    logging.basicConfig(
+        level=logging.DEBUG, format="%(asctime)s %(levelno)s - %(message)s"
+    )
 
 
 def create_webdriver(chromedriver_path: str, hide: bool) -> webdriver.Chrome:
@@ -48,9 +52,12 @@ def get_options() -> Tuple[bool, str]:
         help="Provides the location of ChromeDriver. Should probably be the full path.",
         default=shutil.which("chromedriver"),
     )
+    parser.add_argument("-d", "--debug", help="Prints debug logs", action="store_true")
     args = parser.parse_args()
+    if args.debug:
+        setup_debug_logging()
     if args.chromedriver_path is None:
-        logging.warning(
+        warnings.warn(
             "Couldn't find the location of a chromedriver. Provide one like '-c /path/to/chromedriver'"
         )
         sys.exit(1)

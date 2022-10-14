@@ -14,16 +14,17 @@ pythonanywhere_3_months -Hc /usr/local/bin/chromedriver
 As long as no visible errors are thrown, the script succeeded. You can run it without the `-H` flag to watch it log in and click the relevant links/buttons.
 
 ```
-usage: pythonanywhere_3_months [-h] [-H] [-c CHROMEDRIVER_PATH]
+usage: pythonanywhere_3_months [-h] [-H] [-c CHROMEDRIVER_PATH] [-d]
 
 Clicks the 'Run until 3 months from today' on pythonanywhere
 
-optional arguments:
+options:
   -h, --help            show this help message and exit
   -H, --hidden          Hide the ChromeDriver.
   -c CHROMEDRIVER_PATH, --chromedriver-path CHROMEDRIVER_PATH
                         Provides the location of ChromeDriver. Should probably
                         be the full path.
+  -d, --debug           Prints debug logs
 ```
 
 Put pythonanywhere credentials in your home directory; at `$XDG_DATA_HOME/pythonanywhere_credentials.yaml` (`~/.local/share/pythonanywhere_credentials.yaml`) with contents like:
