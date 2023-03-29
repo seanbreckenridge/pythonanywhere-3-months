@@ -105,11 +105,12 @@ def run(
 
         # Click 'Run until 3 months from today'
         driver.find_element(By.CSS_SELECTOR, RUN_BUTTON_SELECTOR).click()
+
+        # save current time to 'last run time file', so we can check if we need to run this again
+        with open(last_run_at_absolute_path, "w") as f:
+            f.write(str(time()))
     except:
         traceback.print_exc()
     finally:
         if driver:
             driver.quit()
-        # save current time to 'last run time file', so we can check if we need to run this again
-        with open(last_run_at_absolute_path, "w") as f:
-            f.write(str(time()))
