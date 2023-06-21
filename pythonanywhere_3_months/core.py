@@ -1,15 +1,12 @@
 #!/usr/local/env python3
 
 import os
-import sys
 import traceback
 import logging
 import argparse
-import shutil
-import warnings
 from time import time
 from pathlib import Path
-from typing import Tuple, Optional
+from typing import Tuple, Optional, Union
 
 import yaml
 from selenium import webdriver
@@ -28,14 +25,16 @@ def setup_debug_logging() -> None:
     )
 
 
-def create_webdriver(chromedriver_path: str, hide: bool) -> webdriver.Chrome:
+def create_webdriver(chromedriver_path: Union[str, None], hide: bool) -> webdriver.Chrome:
     """Creates a webdriver, hides if requested."""
     options = Options()
     if hide:
         options.add_argument("--headless")
         options.add_argument("--disable-gpu")
         logging.debug("Creating hidden chrome browser")
-    return webdriver.Chrome(chromedriver_path, options=options)
+    if chromedriver_path is not None:
+        options.binary_location = chromedriver_path
+    return webdriver.Chrome(options=options)
 
 
 def get_options() -> Tuple[bool, str]:
@@ -50,19 +49,13 @@ def get_options() -> Tuple[bool, str]:
         "-c",
         "--chromedriver-path",
         help="Provides the location of ChromeDriver. Should probably be the full path.",
-        default=shutil.which("chromedriver"),
+        default=None,
     )
     parser.add_argument("-d", "--debug", help="Prints debug logs", action="store_true")
     args = parser.parse_args()
     if args.debug:
         setup_debug_logging()
-    if args.chromedriver_path is None:
-        warnings.warn(
-            "Couldn't find the location of a chromedriver. Provide one like '-c /path/to/chromedriver'"
-        )
-        sys.exit(1)
-    else:
-        logging.debug("Chromedriver path: {}".format(args.chromedriver_path))
+    logging.debug("Custom chromedriver path: {}".format(args.chromedriver_path))
     return args.hidden, args.chromedriver_path
 
 
@@ -109,7 +102,7 @@ def run(
         # save current time to 'last run time file', so we can check if we need to run this again
         with open(last_run_at_absolute_path, "w") as f:
             f.write(str(time()))
-    except:
+    except Exception:
         traceback.print_exc()
     finally:
         if driver:
