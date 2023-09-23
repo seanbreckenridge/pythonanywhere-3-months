@@ -69,7 +69,7 @@ def get_credentials(filepath: str) -> Tuple[str, str]:
 
 
 # global variables so someone can monkey patch
-# if they want to -- incase this breaks
+# if they want to -- in case this breaks
 LOGIN_ID = "id_auth-username"
 PASSWORD_ID = "id_auth-password"
 LOGIN_BUTTON = "id_next"
