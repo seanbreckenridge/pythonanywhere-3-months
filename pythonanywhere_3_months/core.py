@@ -1,6 +1,7 @@
 #!/usr/local/env python3
 
 import os
+import sys
 import traceback
 import logging
 import argparse
@@ -10,7 +11,6 @@ from typing import Tuple, Optional, Union
 
 import yaml
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 
 from . import (
@@ -25,16 +25,21 @@ def setup_debug_logging() -> None:
     )
 
 
-def create_webdriver(chromedriver_path: Union[str, None], hide: bool) -> webdriver.Chrome:
+def create_webdriver(
+    chromedriver_path: Union[str, None], hide: bool
+) -> webdriver.Chrome:
     """Creates a webdriver, hides if requested."""
-    options = Options()
+    options = webdriver.ChromeOptions()
     if hide:
-        options.add_argument("--headless")
-        options.add_argument("--disable-gpu")
+        options.add_argument("headless")
+        options.add_argument("disable-gpu")
+        options.add_argument("window-size=1920x1080")
         logging.debug("Creating hidden chrome browser")
+    service: Optional[webdriver.ChromeService] = None
     if chromedriver_path is not None:
-        options.binary_location = chromedriver_path
-    return webdriver.Chrome(options=options)
+        service = webdriver.ChromeService(chromedriver_path)
+        logging.debug("Using custom chromedriver path: {}".format(chromedriver_path))
+    return webdriver.Chrome(options=options, service=service)  # type: ignore
 
 
 def get_options() -> Tuple[bool, str]:
@@ -102,6 +107,8 @@ def run(
         # save current time to 'last run time file', so we can check if we need to run this again
         with open(last_run_at_absolute_path, "w") as f:
             f.write(str(time()))
+
+        print("Done!", file=sys.stderr)
     except Exception:
         traceback.print_exc()
     finally:
